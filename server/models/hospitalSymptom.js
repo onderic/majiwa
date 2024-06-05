@@ -1,14 +1,13 @@
+// models/hospitalSymptom.js
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/database.js';
-import Hospital from './hospital.js';
-import Symptom from './symptom.js';
 
 const HospitalSymptom = sequelize.define('HospitalSymptom', {
     hospitalId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Hospital,
+            model: 'Hospitals',
             key: 'id'
         },
         onDelete: 'CASCADE'
@@ -17,7 +16,7 @@ const HospitalSymptom = sequelize.define('HospitalSymptom', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: Symptom,
+            model: 'Symptoms',
             key: 'id'
         },
         onDelete: 'CASCADE'

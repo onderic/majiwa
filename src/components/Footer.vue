@@ -22,6 +22,7 @@
     <div class="border-t border-gray-800 mt-8 pt-4 text-sm text-center">
         <p>&copy; 2024 Health Connect. All rights reserved.</p>
     </div>
+
 </footer>
 
 </template>

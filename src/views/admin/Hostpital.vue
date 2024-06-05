@@ -15,7 +15,7 @@
             <th class="px-4 py-2">Location</th>
             <th class="px-4 py-2">Address</th>
             <th class="px-4 py-2">Capacity</th>
-            <th class="px-4 py-2">Beds Available</th>
+            <th class="px-4 py-2">Symptoms</th>
             <th class="px-4 py-2">Level</th>
             <th class="px-4 py-2">Actions</th>
           </tr>
@@ -26,7 +26,11 @@
             <td class="border px-4 py-2">{{ hospital.location }}</td>
             <td class="border px-4 py-2">{{ hospital.address }}</td>
             <td class="border px-4 py-2">{{ hospital.capacity }}</td>
-            <td class="border px-4 py-2">{{ hospital.bedsAvailable }}</td>
+            <td class="border px-4 py-2">
+                <ul>
+                    <li v-for="symptom in hospital.Symptoms" :key="symptom.id">{{ symptom.name }}</li>
+                </ul>
+            </td>
             <td class="border px-4 py-2">{{ hospital.level }}</td>
             <td class="border px-4 py-2">
               <button @click="editHospital(hospital)" class="px-2 py-1 bg-blue-500 text-white rounded-md">Edit</button>
@@ -130,7 +134,7 @@
 
       async deleteHospital(id) {
         try {
-          await axios.delete(`/api/hospital/${id}`);
+          await axios.delete(`/api/delete/hospital/${id}`);
           this.fetchHospitals();
         } catch (error) {
           console.error('Error deleting hospital:', error);
