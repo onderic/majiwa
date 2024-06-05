@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import User from '@/layouts/User.vue'
 import HomeView from '@/views/HomeView.vue'
 import SymptomView from '@/views/SymptomView.vue'
+import AddSymptom from '@/views/admin/AddSymptoms.vue'
+import Hospital from '@/views/admin/Hostpital.vue'
 
 
 const router = createRouter({
@@ -31,6 +33,17 @@ const router = createRouter({
           component: () => import('../views/AboutView.vue')
         }
       ]
+      
+    },
+    {
+      path: '/admin/add/symptoms',
+      name: 'addSymptom',
+      component: AddSymptom
+    },
+    {
+      path: '/admin/add/hospitals',
+      name: 'addHospital',
+      component: Hospital
     },
    
   ]
