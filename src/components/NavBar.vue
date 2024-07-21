@@ -14,14 +14,14 @@
               <path d="m6 6 12 12"/>
             </svg>
           </button>
-          <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
+          <!-- <button type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
             Login
-          </button>
+          </button> -->
         </div>
         <div id="navbar-alignment" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2">
           <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
             <a class="font-medium text-blue-500" href="/" aria-current="page">Home</a>
-            <a class="font-medium text-gray-600 hover:text-gray-400" href="#">Resources</a>
+            <!-- <a class="font-medium text-gray-600 hover:text-gray-400" href="#">Resources</a> -->
             <a class="font-medium text-gray-600 hover:text-gray-400" href="#">About</a>
             <a class="font-medium text-gray-600 hover:text-gray-400" href="#">Contact</a>
           </div>
