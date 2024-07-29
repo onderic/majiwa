@@ -24,7 +24,9 @@
             <!-- <a class="font-medium text-gray-600 hover:text-gray-400" href="#">Resources</a> -->
             <a class="font-medium text-gray-600 hover:text-gray-400" href="#">About</a>
             <a class="font-medium text-gray-600 hover:text-gray-400" href="#">Contact</a>
+           <router-link to="/login"> <a class="flex justify-end items-end bg-blue-500 text-white py-1 px-3 rounded-md">Login</a></router-link>
           </div>
+        
         </div>
       </nav>
     </div>

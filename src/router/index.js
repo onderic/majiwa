@@ -6,6 +6,9 @@ import SymptomView from '@/views/SymptomView.vue'
 import AddSymptom from '@/views/admin/AddSymptoms.vue'
 import Hospital from '@/views/admin/Hostpital.vue'
 
+import Register from '@/views/Authentication/Register.vue'
+import Login from '@/views/Authentication/Login.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +48,17 @@ const router = createRouter({
       name: 'addHospital',
       component: Hospital
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
+    },
+   
    
   ]
 })

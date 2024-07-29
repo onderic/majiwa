@@ -7,6 +7,9 @@ import { sequelize } from '../config/database.js';
 
 const router = express.Router();
 
+
+
+
 // SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
 router.post('/find-hospitals', async (req, res) => {

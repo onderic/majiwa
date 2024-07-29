@@ -69,6 +69,7 @@ router.delete('/symptoms/:id', async (req, res) => {
             return res.status(404).json({ error: 'Symptom not found' });
         }
         await symptom.destroy();
+
         res.status(204).end();
     } catch (error) {
         console.error('Error deleting symptom:', error);
