@@ -52,7 +52,7 @@
                 <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white truncate">{{ hospital.name }}</h5>
               </a>
               <p class="text-gray-700 dark:text-gray-400 truncate">Address: {{ hospital.address }}</p>
-              <button @click="openModal(hospital)" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">View Details</button>
+              <button @click="viewHospitalDetails(hospital.id)" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">View Details</button>
             </div>
           </div>
         </li>
@@ -68,7 +68,7 @@
                 <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white truncate">{{ hospitals[0].name }}</h5>
               </a>
               <p class="text-gray-700 dark:text-gray-400 truncate">Address: {{ hospitals[0].address }}</p>
-              <button @click="openModal(hospitals[0])" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">View Details</button>
+              <button @click="viewHospitalDetails(hospitals[0].id)" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">View Details</button>
             </div>
           </div>
         </div>
@@ -115,8 +115,6 @@ export default {
       selectedSymptoms: [],
       hospitals: [],
       showHospitals: false,
-      selectedHospital: null,
-      isModalVisible: false
     };
   },
   methods: {
@@ -151,20 +149,17 @@ export default {
     goBack() {
       this.resetSelection();
     },
-    openModal(hospital) {
-      this.selectedHospital = hospital;
-      this.isModalVisible = true;
+    viewHospitalDetails(hospitalId) {
+      this.$router.push({ name: 'hospital-details', params: { id: hospitalId } });
     },
-    closeModal() {
-      this.isModalVisible = false;
-      this.selectedHospital = null;
-    }
   },
   mounted() {
     this.fetchSymptoms();
   }
 };
 </script>
+
+
 
 <style scoped>
 .fade-enter-active, .fade-leave-active {

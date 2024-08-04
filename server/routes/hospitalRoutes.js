@@ -76,9 +76,10 @@ router.get('/hospitals/:id', async (req, res) => {
     }
 });
 
+
 // Create a new hospital
 router.post('/hospitals', async (req, res) => {
-    const { name, location, address, capacity, bedsAvailable, level, symptoms } = req.body;
+    const { name, location, address, capacity, bedsAvailable, level, latitude, longitude, symptoms } = req.body;
     try {
         // Create the hospital first
         const newHospital = await Hospital.create({
@@ -88,11 +89,11 @@ router.post('/hospitals', async (req, res) => {
             capacity,
             bedsAvailable,
             level,
+            latitude,
+            longitude
         });
 
-        console.log("symptoms",symptoms)
-
-        // Now handle symptoms
+        // Handle symptoms
         if (symptoms && symptoms.length > 0) {
             // Create associations between hospital and symptoms
             await Promise.all(symptoms.map(async symptomId => {
@@ -113,12 +114,13 @@ router.post('/hospitals', async (req, res) => {
 // Update a hospital by ID
 router.put('/hospitals/:id', async (req, res) => {
     const { id } = req.params;
-    const { name, location, address, capacity, bedsAvailable, level, symptoms } = req.body;
+    const { name, location, address, capacity, bedsAvailable, level, latitude, longitude, symptoms } = req.body;
     try {
-        let hospital = await Hospital.findByPk(id);
+        const hospital = await Hospital.findByPk(id);
         if (!hospital) {
             return res.status(404).json({ error: 'Hospital not found' });
         }
+
         await hospital.update({
             name,
             location,
@@ -126,8 +128,23 @@ router.put('/hospitals/:id', async (req, res) => {
             capacity,
             bedsAvailable,
             level,
-            symptoms
+            latitude,
+            longitude
         });
+
+        // Handle symptoms
+        if (symptoms) {
+            await HospitalSymptom.destroy({
+                where: { hospitalId: id }
+            });
+            await Promise.all(symptoms.map(async symptomId => {
+                await HospitalSymptom.create({
+                    hospitalId: id,
+                    symptomId
+                });
+            }));
+        }
+
         res.json(hospital);
     } catch (error) {
         console.error('Error updating hospital:', error);
@@ -135,24 +152,26 @@ router.put('/hospitals/:id', async (req, res) => {
     }
 });
 
+
 // Delete a hospital by ID
-router.delete('/delete/hospitals/:id', async (req, res) => {
+router.delete('/hospitals/:id', async (req, res) => {
     const { id } = req.params;
     try {
+        // Check if the hospital exists
         const hospital = await Hospital.findByPk(id);
         if (!hospital) {
             return res.status(404).json({ error: 'Hospital not found' });
         }
 
+        // Delete associations from HospitalSymptom table
         await HospitalSymptom.destroy({
-            where: {
-                hospitalId: id
-            }
+            where: { hospitalId: id }
         });
 
         // Delete the hospital
         await hospital.destroy();
-        res.status(204).end();
+
+        res.status(204).send(); // No content response for successful deletion
     } catch (error) {
         console.error('Error deleting hospital:', error);
         res.status(500).json({ error: 'Internal server error' });

@@ -29,7 +29,16 @@ const Hospital = sequelize.define('Hospital', {
         type: DataTypes.ENUM('Level2', 'Level3', 'Level4', 'Level5', 'Level6'),
         allowNull: false
     },
-    
+    latitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        defaultValue: 0.0 
+    },
+    longitude: {
+        type: DataTypes.FLOAT, 
+        allowNull: false,
+        defaultValue: 0.0 
+    }
 });
 
 Hospital.belongsToMany(Symptom, { through: HospitalSymptom, foreignKey: 'hospitalId', onDelete: 'CASCADE' });

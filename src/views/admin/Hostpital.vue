@@ -5,9 +5,8 @@
       <div class="p-4">
         <a href="/" class="text-lg font-semibold mb-4">Admin Panel</a>
         <ul class="space-y-2">
-           <li><router-link to="/admin/add/symptoms" class="block p-2 text-gray-700 hover:bg-gray-200 rounded">Symptoms</router-link></li>
+          <li><router-link to="/admin/add/symptoms" class="block p-2 text-gray-700 hover:bg-gray-200 rounded">Symptoms</router-link></li>
           <li><router-link to="/admin/add/hospitals" class="block p-2 text-gray-700 hover:bg-gray-200 rounded">Hospitals</router-link></li>
-         
         </ul>
       </div>
     </aside>
@@ -69,6 +68,8 @@
         <input v-model="hospital.address" placeholder="Hospital Address" required class="block w-full p-2 border border-gray-300 rounded-md mb-2">
         <input v-model.number="hospital.capacity" type="number" placeholder="Capacity" required class="block w-full p-2 border border-gray-300 rounded-md mb-2">
         <input v-model.number="hospital.bedsAvailable" type="number" placeholder="Beds Available" required class="block w-full p-2 border border-gray-300 rounded-md mb-2">
+        <input v-model.number="hospital.latitude" type="number" step="0.000000001" placeholder="Latitude" class="block w-full p-2 border border-gray-300 rounded-md mb-2">
+        <input v-model.number="hospital.longitude" type="number" step="0.00000001" placeholder="Longitude" class="block w-full p-2 border border-gray-300 rounded-md mb-2">
         <select v-model="hospital.level" required class="block w-full p-2 border border-gray-300 rounded-md mb-2">
           <option disabled value="">Select Level</option>
           <option value="Level2">Level 2</option>
@@ -86,6 +87,7 @@
             </div>
           </div>
         </div>
+
         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md mr-2">Save</button>
         <button @click="cancelForm" class="px-4 py-2 bg-gray-500 text-white rounded-md">Cancel</button>
       </form>
@@ -101,93 +103,127 @@ import axios from 'axios';
 
 export default {
   data() {
-    return {
-      hospitals: [],
-      hospital: {
+  return {
+    hospitals: [],
+    hospital: {
+      id: null,
+      name: '',
+      location: '',
+      address: '',
+      capacity: null,
+      bedsAvailable: null,
+      level: '',
+      latitude: null,
+      longitude: null,
+      symptoms: [] 
+    },
+    showForm: false,
+    symptoms: []
+  };
+  },
+
+  methods: {
+  async fetchHospitals() {
+    try {
+      const response = await axios.get('/api/hospitals');
+      this.hospitals = response.data;
+    } catch (error) {
+      console.error('Error fetching hospitals:', error);
+    }
+  },
+  async fetchSymptoms() {
+    try {
+      const response = await axios.get('/api/symptoms');
+      this.symptoms = response.data;
+    } catch (error) {
+      console.error('Error fetching symptoms:', error);
+    }
+  },
+  async submitHospital() {
+    try {
+      const payload = {
+        name: this.hospital.name,
+        location: this.hospital.location,
+        address: this.hospital.address,
+        capacity: this.hospital.capacity,
+        bedsAvailable: this.hospital.bedsAvailable,
+        level: this.hospital.level,
+        latitude: this.hospital.latitude,
+        longitude: this.hospital.longitude,
+        symptoms: this.hospital.symptoms.map(symptomId => Number(symptomId)) // Ensure symptom IDs are numbers
+      };
+
+      if (this.hospital.id) {
+        // Update existing hospital
+        await axios.put(`/api/hospitals/${this.hospital.id}`, payload);
+      } else {
+        // Add new hospital
+        await axios.post('/api/hospitals', payload);
+      }
+      this.showForm = false;
+      this.fetchHospitals();
+    } catch (error) {
+      console.error('Error saving hospital:', error);
+    }
+  },
+  async deleteHospital(id) {
+    try {
+      await axios.delete(`/api/hospitals/${id}`);
+      this.fetchHospitals();
+    } catch (error) {
+      console.error('Error deleting hospital:', error);
+    }
+  },
+  editHospital(hospital) {
+    // Ensure symptoms is an array
+    this.hospital = {
+      id: hospital.id,
+      name: hospital.name,
+      location: hospital.location,
+      address: hospital.address,
+      capacity: hospital.capacity,
+      bedsAvailable: hospital.bedsAvailable,
+      level: hospital.level,
+      latitude: hospital.latitude,
+      longitude: hospital.longitude,
+      symptoms: hospital.symptoms ? hospital.symptoms.map(symptom => symptom.id) : [] // Initialize to empty array if undefined
+    };
+    this.showForm = true;
+  },
+  toggleForm() {
+    this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.hospital = {
+        id: null,
         name: '',
         location: '',
         address: '',
-        symptoms: [] 
-      },
-      showForm: false,
-      symptoms: []
-    };
-  },
-  methods: {
-    async fetchHospitals() {
-      try {
-        const hospitalsResponse = await axios.get('/api/hospitals');
-        this.hospitals = hospitalsResponse.data;
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    },
-    async fetchSymptoms() {
-      try {
-        const response = await axios.get('/api/symptoms');
-        this.symptoms = response.data;
-      } catch (error) {
-        console.error('Error fetching symptoms:', error);
-      }
-    },
-    async submitHospital() {
-      try {
-        const payload = {
-          name: this.hospital.name,
-          location: this.hospital.location,
-          address: this.hospital.address,
-          capacity: this.hospital.capacity, 
-          bedsAvailable: this.hospital.bedsAvailable,
-          level: this.hospital.level,
-          symptoms: this.hospital.symptoms.map(symptomId => Number(symptomId))
-        };
-
-        if (this.hospital.id) {
-          // Update existing hospital
-          await axios.put(`/api/hospitals/${this.hospital.id}`, payload);
-        } else {
-          // Add new hospital
-          await axios.post('/api/hospitals', payload);
-        }
-        this.showForm = false;
-        this.fetchHospitals();
-      } catch (error) {
-        console.error('Error saving hospital:', error);
-      }
-    },
-    async deleteHospital(id) {
-      try {
-        await axios.delete(`/api/delete/hospital/${id}`);
-        this.fetchHospitals();
-      } catch (error) {
-        console.error('Error deleting hospital:', error);
-      }
-    },
-    editHospital(hospital) {
-      this.hospital = { ...hospital };
-      // Pre-select symptoms for editing hospital
-      this.hospital.symptoms = this.hospitals.find(h => h.id === hospital.id)?.symptoms.map(s => s.id) || [];
-      this.showForm = true;
-    },
-    cancelForm() {
-      this.showForm = false;
-    },
-    toggleForm() {
-      this.showForm = !this.showForm;
-      if (!this.showForm) {
-        this.hospital = {
-          name: '',
-          location: '',
-          symptoms: []
-        };
-      }
-    },
-    logout() {
-      // Implement your logout logic here
-      console.log('Logging out');
+        capacity: null,
+        bedsAvailable: null,
+        level: '',
+        latitude: null,
+        longitude: null,
+        symptoms: []
+      };
     }
   },
-  mounted() {
+  cancelForm() {
+    this.showForm = false;
+    this.hospital = {
+      id: null,
+      name: '',
+      location: '',
+      address: '',
+      capacity: null,
+      bedsAvailable: null,
+      level: '',
+      latitude: null,
+      longitude: null,
+      symptoms: []
+    };
+  }
+},
+  created() {
     this.fetchHospitals();
     this.fetchSymptoms();
   }
@@ -195,5 +231,5 @@ export default {
 </script>
 
 <style scoped>
-/* Add custom styles here if needed */
+/* Add any additional styles here */
 </style>

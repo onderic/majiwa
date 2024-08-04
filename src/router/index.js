@@ -8,6 +8,7 @@ import Hospital from '@/views/admin/Hostpital.vue'
 
 import Register from '@/views/Authentication/Register.vue'
 import Login from '@/views/Authentication/Login.vue'
+import HospitalDetails from '@/views/HospitalDetails.vue';
 
 
 const router = createRouter({
@@ -26,6 +27,12 @@ const router = createRouter({
           path: '/user-symptoms',
           name: 'symptoms',
           component: SymptomView
+        },
+        {
+          path: '/hospital/:id',
+          name: 'hospital-details',
+          component: HospitalDetails,
+          props: true
         },
         {
           path: '/about',
