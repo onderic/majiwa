@@ -13,7 +13,7 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
+   
     <div class="flex-1 p-6">
   
       <nav class="bg-white border-b border-gray-200 mb-4">
